@@ -57,7 +57,9 @@ class AppTheme {
       enabledBorder: _border(const Color.fromRGBO(209, 197, 181, 1)),
       focusedBorder: _border(),
       errorBorder: _border(AppColors.error),
+      focusedErrorBorder: _border(),
       errorStyle: TextStyle(color: AppColors.error),
+
       disabledBorder: _border(const Color.fromARGB(255, 206, 202, 198)),
       hintStyle: appTextTheme.bodyLarge!.copyWith(
         color: const Color.fromRGBO(209, 197, 181, 1),
