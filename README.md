@@ -1,6 +1,6 @@
 # partfolio_app
 
-A new Flutter project.
+This application begin created as a demo project for my flutter developer portfolio. Started by 01.07.2026
 
 ## Getting Started
 
