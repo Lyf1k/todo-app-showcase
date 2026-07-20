@@ -7,13 +7,13 @@ class AuthTextField extends StatefulWidget {
   final bool? isPassword;
   final String? Function(String?)? validator;
   final String hintText;
-  final String text;
+  final String titleText;
 
   const AuthTextField({
     super.key,
     required this.controller,
     required this.hintText,
-    required this.text,
+    required this.titleText,
     this.keyboardType = TextInputType.text,
     this.validator,
     this.isPassword,
@@ -26,10 +26,12 @@ class AuthTextField extends StatefulWidget {
 class _AuthTextFieldState extends State<AuthTextField> {
   late bool isObscureText;
   late bool isNotEntity;
+  late bool fieldIsNotEmpty;
 
   @override
   void initState() {
     isObscureText = true;
+    fieldIsNotEmpty = true;
     isNotEntity = widget.controller.text.isNotEmpty;
     super.initState();
   }
@@ -37,12 +39,22 @@ class _AuthTextFieldState extends State<AuthTextField> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(widget.text, style: Theme.of(context).textTheme.bodyLarge),
+        Text(widget.titleText, style: Theme.of(context).textTheme.bodyLarge),
         TextFormField(
-          validator: widget.validator,
+          validator:
+              widget.validator ??
+              (value) {
+                if (value == null || value.isEmpty) {
+                  return "Error correct ${widget.titleText.toLowerCase()}";
+                }
+                return null;
+              },
+          onChanged: (value) {
+            if (value.isNotEmpty) {}
+          },
           controller: widget.controller,
           obscureText: widget.isPassword == true ? isObscureText : false,
           decoration: InputDecoration(
@@ -55,8 +67,18 @@ class _AuthTextFieldState extends State<AuthTextField> {
                       });
                     },
                     icon: isObscureText == true
-                        ? Icon(Icons.visibility_outlined)
-                        : Icon(Icons.visibility_off),
+                        ? Icon(
+                            Icons.visibility_outlined,
+                            color: isNotEntity
+                                ? Theme.of(context).primaryColor
+                                : null,
+                          )
+                        : Icon(
+                            Icons.visibility_off,
+                            color: isNotEntity
+                                ? Theme.of(context).primaryColor
+                                : null,
+                          ),
                   )
                 : null,
           ),
