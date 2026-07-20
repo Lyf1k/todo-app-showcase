@@ -5,14 +5,16 @@ class TaskCard extends StatefulWidget {
   final double width;
   final void Function()? onPressed;
   final String taskName;
-  final String dateTime;
+  final String? dateTime;
+  final bool isCompleted;
   const TaskCard({
     super.key,
     required this.backgroundColor,
     required this.width,
     required this.onPressed,
     this.taskName = "Task ...",
-    required this.dateTime,
+    this.dateTime,
+    this.isCompleted = false,
   });
 
   @override
@@ -20,12 +22,11 @@ class TaskCard extends StatefulWidget {
 }
 
 class _TaskCardState extends State<TaskCard> {
-  late bool isCompleted;
+  late bool isCompletedTask;
 
   @override
   void initState() {
-    // TODO: implement initState
-    isCompleted = false;
+    isCompletedTask = widget.isCompleted;
     super.initState();
   }
 
@@ -45,10 +46,10 @@ class _TaskCardState extends State<TaskCard> {
               child: IconButton(
                 onPressed: () {
                   setState(() {
-                    isCompleted = !isCompleted;
+                    isCompletedTask = !isCompletedTask;
                   });
                 },
-                icon: isCompleted ? Icon(Icons.task) : Icon(Icons.add_task),
+                icon: isCompletedTask ? Icon(Icons.task) : Icon(Icons.add_task),
               ),
             ),
             Column(
@@ -65,15 +66,17 @@ class _TaskCardState extends State<TaskCard> {
                     // softWrap: true,
                   ),
                 ),
-                Text(
-                  // "${DateTime.now().month} ${DateTime.now().day}, ${DateTime.now().year}, ${DateTime.now().hour}:${DateTime.now().minute}",
-                  widget.dateTime,
-                  style: isCompleted
-                      ? Theme.of(context).textTheme.bodyLarge
-                      : Theme.of(
-                          context,
-                        ).textTheme.bodyLarge!.copyWith(fontSize: 18),
-                ),
+                widget.dateTime != null
+                    ? Text(
+                        // "${DateTime.now().month} ${DateTime.now().day}, ${DateTime.now().year}, ${DateTime.now().hour}:${DateTime.now().minute}",
+                        "${widget.dateTime}",
+                        style: isCompletedTask
+                            ? Theme.of(context).textTheme.bodyLarge
+                            : Theme.of(
+                                context,
+                              ).textTheme.bodyLarge!.copyWith(fontSize: 18),
+                      )
+                    : SizedBox(),
               ],
             ),
           ],
