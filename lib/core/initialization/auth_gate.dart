@@ -26,17 +26,18 @@ class _AuthGateState extends State<AuthGate> {
         if (!snapshot.hasData) {
           return AnimatedSwitcher(
             transitionBuilder: (Widget child, Animation<double> animation) {
-              return ScaleTransition(scale: animation, child: child);
+              return FadeTransition(opacity: animation,
+              child: child);
             },
-            duration: const Duration(milliseconds: 500),
+            duration: const Duration(milliseconds: 800),
             child: const LoginScreen(key: ValueKey("login")),
           );
         }
 
         return AnimatedSwitcher(
-          duration: Duration(milliseconds: 500),
+          duration: Duration(milliseconds: 800),
           transitionBuilder: (Widget child, Animation<double> animation) {
-            return ScaleTransition(scale: animation, child: child);
+            return FadeTransition(opacity: animation, child: child);
           },
           child: AuthorizedTasksScope(
             key: ValueKey(snapshot.data!.id),

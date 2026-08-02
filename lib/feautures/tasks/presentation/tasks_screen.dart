@@ -51,6 +51,11 @@ class _TasksScreen extends State<TasksScreen> {
             pinned: true,
             expandedHeight: 100,
             actions: [
+              // IconButton.outlined(onPressed: () async {
+              //   await notificationService.showNotificationWithActions(); 
+              //   await notificationService.createSheduleNotification(importance: true, tickerText: "Create shedule task");
+
+              // }, icon: Icon(Icons.notification_add_outlined)),
               IconButton.outlined(
                 onPressed: () async {
                   await tasksController.delAllItems();
@@ -266,7 +271,7 @@ class _CreateTodoModalBottomSheetState
               ),
               Spacer(),
               SizedBox(
-                width: MediaQuery.of(context).size.width * 0.1,
+                width: MediaQuery.of(context).size.width * 0.2,
                 child: ElevatedButton(
                   onPressed: () {
                     widget.tasksController.addItem(
@@ -323,13 +328,13 @@ class _TaskCards extends StatelessWidget {
     return StreamBuilder(
       stream: tasksController.tasksStream,
       builder: (context, snapshot) {
-        if (!snapshot.hasData) {
+        if (!snapshot.hasData || snapshot.data == null) {
           return SliverToBoxAdapter(
             child: Center(
               child: Column(
                 children: [
                   Text(
-                    "No Tasks",
+                    "Uploading tasks...",
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                   CircularProgressIndicator(),
@@ -339,9 +344,13 @@ class _TaskCards extends StatelessWidget {
           );
         }
         final tasks = snapshot.data!;
+        if (tasks.isEmpty) {
+          return SliverToBoxAdapter(child: Center(child: Text("No tasks")));
+        }
         return SliverList.separated(
           separatorBuilder: (context, index) =>
-              Divider(height: MediaQuery.sizeOf(context).height * 0.02),
+              // Divider(height: MediaQuery.sizeOf(context).height * 0.02),
+              SizedBox(height: MediaQuery.sizeOf(context).height * 0.02,),
           key: centerKey,
           itemCount: tasks.length,
           itemBuilder: (BuildContext context, int index) {
@@ -351,7 +360,7 @@ class _TaskCards extends StatelessWidget {
               backgroundColor: AppColors.surface,
               width: MediaQuery.sizeOf(context).width,
               onPressed: () {},
-              dateTime: task.dateTime == null ? null : task.dateTime.toString(),
+              dateTime: task.dateTime?.toString(),
             );
           },
         );
