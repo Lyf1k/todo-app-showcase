@@ -1,14 +1,17 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:partfolio_app/core/service/notification_service.dart';
 import 'package:partfolio_app/feautures/tasks/domain/entity/tasks.dart';
 import 'package:partfolio_app/feautures/tasks/domain/repository/tasks_repository.dart';
 import 'package:rxdart/subjects.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 class TasksController extends ChangeNotifier {
   final TasksRepository taskRepository;
   final int userId;
-  TasksController({required this.taskRepository, required this.userId}) {
+  final NotificationService notificationService;
+  TasksController({required this.taskRepository, required this.userId, required this.notificationService}) {
     loadData();
   }
 
@@ -39,10 +42,14 @@ class TasksController extends ChangeNotifier {
     final newTask = Tasks(
       id: DateTime.now().microsecondsSinceEpoch,
       text: data,
-      dateTime: todoDateTime == null ? null : "${todoDateTime}",
+      dateTime: todoDateTime == null ? null : "$todoDateTime",
     );
     await taskRepository.addTasks(newTask, userId);
+    print(newTask);
     await loadData();
+    if (todoDateTime != null) {
+    await notificationService.createSheduleNotification(importance: true, tickerText: "Create shedule", todoDateTime: tz.TZDateTime.from(todoDateTime, tz.local));
+    }
     notifyListeners();
   }
 
@@ -84,9 +91,16 @@ class TasksController extends ChangeNotifier {
   @override
   void dispose() {
     // TODO: implement dispose
-    if (!tasksStream.isClosed) {
-      tasksStream.close();
-    }
+    print("TaskController disposed");
     super.dispose();
   }
+
+  // @override
+  // void dispose() {
+  //   // TODO: implement dispose
+  //   if (!tasksStream.isClosed) {
+  //     tasksStream.close();
+  //   }
+  //   super.dispose();
+  // }
 }
