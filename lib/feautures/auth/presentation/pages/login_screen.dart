@@ -4,10 +4,12 @@ import 'package:flutter_svg/svg.dart';
 import 'package:partfolio_app/core/initialization/widgets/dependencies_scope.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../core/theme/app_colors.dart';
 import '../../../tasks/presentation/bottom_navigation_bar.dart';
 import '../../domain/repository/authentication_repository.dart';
 import '../../utils/auth_validators.dart';
 import '../utils/auth_form_field.dart';
+import '../utils/snack_bar.dart';
 import 'registration_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -136,6 +138,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                   // );
                                 }
                               } catch (e) {
+                                // ignore: use_build_context_synchronously
+                                showSnackBar(label: '$e', context: context, backgroundColor: Theme.of(context).colorScheme.error, contentTextStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppColors.onError),);
                                 print("Some error: $e");
                               }
                             },
