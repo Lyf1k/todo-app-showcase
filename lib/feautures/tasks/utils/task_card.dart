@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:partfolio_app/core/theme/app_colors.dart';
 
 class TaskCard extends StatefulWidget {
   final Color backgroundColor;
@@ -12,7 +13,7 @@ class TaskCard extends StatefulWidget {
     required this.backgroundColor,
     required this.width,
     required this.onPressed,
-    this.taskName = "Task ...",
+    this.taskName = " No name ...",
     this.dateTime,
     this.isCompleted = false,
   });
@@ -34,7 +35,7 @@ class _TaskCardState extends State<TaskCard> {
   Widget build(BuildContext context) {
     return DecoratedBox(
       decoration: BoxDecoration(
-        color: widget.backgroundColor,
+        color: isCompletedTask ? Color.lerp(widget.backgroundColor, Colors.grey, 0.2) : widget.backgroundColor,
         borderRadius: BorderRadius.all(Radius.circular(24)),
       ),
       child: SizedBox(
@@ -49,7 +50,7 @@ class _TaskCardState extends State<TaskCard> {
                     isCompletedTask = !isCompletedTask;
                   });
                 },
-                icon: isCompletedTask ? Icon(Icons.task) : Icon(Icons.add_task),
+                icon: isCompletedTask ? Icon(Icons.check_box_outlined) : Icon(Icons.check_box_outline_blank),
               ),
             ),
             Column(
@@ -62,21 +63,12 @@ class _TaskCardState extends State<TaskCard> {
                     // maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     widget.taskName,
-                    style: Theme.of(context).textTheme.bodyLarge,
+                    style: isCompletedTask ? Theme.of(context).textTheme.bodyLarge?.copyWith(decoration: TextDecoration.lineThrough, color: Colors.grey.shade500) : Theme.of(context).textTheme.bodyLarge,
                     // softWrap: true,
                   ),
                 ),
-                widget.dateTime != null
-                    ? Text(
-                        // "${DateTime.now().month} ${DateTime.now().day}, ${DateTime.now().year}, ${DateTime.now().hour}:${DateTime.now().minute}",
-                        "${widget.dateTime}",
-                        style: isCompletedTask
-                            ? Theme.of(context).textTheme.bodyLarge
-                            : Theme.of(
-                                context,
-                              ).textTheme.bodyLarge!.copyWith(fontSize: 18),
+                widget.dateTime == null || widget.dateTime == "null" ? SizedBox() : AnimatedDefaultTextStyle(duration: Duration(milliseconds: 1000), style: TextStyle(  decoration: isCompletedTask ? TextDecoration.lineThrough : TextDecoration.none, fontSize: 12, color: isCompletedTask ? Colors.grey : AppColors.onInfo), curve: Curves.easeIn, child:Text("${widget.dateTime}"),
                       )
-                    : SizedBox(),
               ],
             ),
           ],
