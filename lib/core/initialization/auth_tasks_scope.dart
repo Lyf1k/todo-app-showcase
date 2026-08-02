@@ -24,6 +24,7 @@ class AuthorizedTasksScope extends StatelessWidget {
         print("CREATE TASK CONTROLLER");
 
         return TasksController(
+          notificationService: dependencies.notificationService,
           taskRepository: dependencies.tasksRepository,
           userId: user.id,
         );
