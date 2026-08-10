@@ -5,13 +5,18 @@ import 'package:partfolio_app/core/service/notification_service.dart';
 import 'package:partfolio_app/feautures/tasks/domain/entity/tasks.dart';
 import 'package:partfolio_app/feautures/tasks/domain/repository/tasks_repository.dart';
 import 'package:rxdart/subjects.dart';
+import 'package:timezone/standalone.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 class TasksController extends ChangeNotifier {
   final TasksRepository taskRepository;
   final int userId;
   final NotificationService notificationService;
-  TasksController({required this.taskRepository, required this.userId, required this.notificationService}) {
+  TasksController({
+    required this.taskRepository,
+    required this.userId,
+    required this.notificationService,
+  }) {
     loadData();
   }
 
@@ -30,7 +35,7 @@ class TasksController extends ChangeNotifier {
   Future<void> loadData() async {
     _isLoading = true;
     notifyListeners();
-    await Future.delayed(Duration(milliseconds: 3000));
+    await Future.delayed(Duration(milliseconds: 500));
     taskList = await taskRepository.getTasks(userId);
     tasksStream.add(taskList);
 
@@ -38,27 +43,65 @@ class TasksController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addItem(String data, DateTime? todoDateTime) async {
-    final newTask = Tasks(
-      id: DateTime.now().microsecondsSinceEpoch,
-      text: data,
-      dateTime: todoDateTime == null ? null : "$todoDateTime",
+  Future<void> toggleTaskDone(Tasks task) async {
+    final updateTask = task.copyWith(isDone: !task.isDone);
+    final oldTaskId = taskList.indexWhere((element) => element.id == task.id);
+    final oldTask = taskList[oldTaskId];
+    print(oldTaskId);
+
+    if (oldTaskId == -1) return;
+
+    taskList[oldTaskId] = updateTask;
+    print(
+      "old task status:${task.isDone} ---> New task status:${updateTask.isDone}",
     );
-    await taskRepository.addTasks(newTask, userId);
-    print(newTask);
+    tasksStream.add(taskList);
+    notifyListeners();
+    try {
+      if (updateTask.isDone) {
+        await notificationService.cancel(updateTask.id);
+      }
+
+      await taskRepository.editTasks(updateTask, userId);
+    } catch (e) {
+      taskList[oldTaskId] = oldTask;
+      tasksStream.add(taskList);
+      notifyListeners();
+      rethrow;
+    }
+  }
+
+  Future<void> addItem(Tasks task, {DateTime? todoNotificationTime}) async {
+    // final newTask = Tasks(
+    //   id: DateTime.now().microsecondsSinceEpoch,
+    //   text: task.text,
+    //   dateTime: task.dateTime, isDone: false,
+    // );
+    await taskRepository.addTasks(task, userId);
+    print(task);
     await loadData();
-    if (todoDateTime != null) {
-    await notificationService.createSheduleNotification(importance: true, tickerText: "Create shedule", todoDateTime: tz.TZDateTime.from(todoDateTime, tz.local));
+    if (task.dateTime != null) {
+      await notificationService.createSheduleNotification(
+        taskId: task.id,
+        importance: true,
+        tickerText: "Create shedule",
+        todoDateTime: tz.TZDateTime.from(todoNotificationTime!, tz.local),
+        title: task.text,
+      );
     }
     notifyListeners();
   }
 
-  Future<void> editTask(int taskId, String newTitle, DateTime? dateTime) async {
+  Future<void> editTask(Tasks taskToUpdate) async {
     try {
-      await taskRepository.editTasks(newTitle, taskId, userId);
+      await taskRepository.editTasks(taskToUpdate, userId);
       taskList = taskList.map((task) {
-        if (task.id == taskId) {
-          return Tasks(id: taskId, text: newTitle);
+        if (task.id == taskToUpdate.id) {
+          return Tasks(
+            id: taskToUpdate.id,
+            text: taskToUpdate.text,
+            isDone: taskToUpdate.isDone,
+          );
         } else {
           return task;
         }
@@ -92,6 +135,8 @@ class TasksController extends ChangeNotifier {
   void dispose() {
     // TODO: implement dispose
     print("TaskController disposed");
+    if (tasksStream.isClosed) return;
+    tasksStream.add(null);
     super.dispose();
   }
 

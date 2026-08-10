@@ -8,11 +8,9 @@ import 'package:partfolio_app/feautures/auth/domain/datasource/local_auth_data_s
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalAuthDatasourceImpl implements LocalAuthDataSource {
-  final AuthService authService;
   final SharedPreferencesAsync sharedPreferences;
 
   LocalAuthDatasourceImpl({
-    required this.authService,
     required this.sharedPreferences,
   });
 
@@ -22,28 +20,31 @@ class LocalAuthDatasourceImpl implements LocalAuthDataSource {
   @override
   Future<UserModel?> getCurrentUser() async {
     try {
-      final user = await sharedPreferences.getInt(_activeUserId);
-      if (user == null) return null;
+      final activeUser = await sharedPreferences.getInt(_activeUserId);
+      if (activeUser   == null) return null;
+      print("User from LocalStorage -- $activeUser");
       final userRaw = await sharedPreferences.getStringList(_usersKeys) ?? [];
       for (final userStr in userRaw) {
         final userJson = jsonDecode(userStr);
-        if (userJson['login'] == user) {
+        if (userJson['id'] == activeUser) {
           return UserModel.fromJson(userJson);
         }
       }
-      return null;
     } catch (e) {
       print("Exception getting user: $e");
       throw Exception(
         "Something went wrong during getCurrentUser data source process",
       );
     }
+    return null;
   }
 
   @override
   Future<void> logOut() async {
     await sharedPreferences.remove(_activeUserId);
-    await authService.logOut();
+    final user = await sharedPreferences.getInt(_activeUserId);
+    print("user: $user");
+    // await authService.logOut();
   }
 
   @override
@@ -60,7 +61,6 @@ class LocalAuthDatasourceImpl implements LocalAuthDataSource {
         if (jsonUser['login'] == login && jsonUser['password'] == password) {
           final userId = jsonUser['id'];
           await sharedPreferences.setInt(_activeUserId, userId);
-          await authService.setLoggedIn(userId);
           return UserModel.fromJson(jsonUser);
         } else {
           null;
@@ -97,7 +97,6 @@ class LocalAuthDatasourceImpl implements LocalAuthDataSource {
       print("Saved users: $userRaw");
       print("Input login: $login");
       print("Input password: $password");
-      await authService.setLoggedIn(newUser.id);
       return newUser;
     } catch (e) {
       throw Exception(

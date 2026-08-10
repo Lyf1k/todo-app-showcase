@@ -1,14 +1,12 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:partfolio_app/core/initialization/widgets/dependencies_scope.dart';
-import 'package:partfolio_app/core/theme/app_colors.dart';
-import 'package:partfolio_app/feautures/auth/domain/repository/authentication_repository.dart';
-import 'package:partfolio_app/feautures/auth/presentation/pages/login_screen.dart';
-import 'package:partfolio_app/feautures/auth/presentation/utils/auth_form_field.dart';
-import 'package:provider/provider.dart';
 
-import '../../data/repository/authentication_repository_impl.dart';
+import '../../../../core/initialization/widgets/dependencies_scope.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../utils/auth_form_field.dart';
+import '../utils/snack_bar.dart';
+
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
@@ -101,7 +99,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 height: heigh * 0.2,
                 child: Padding(
                   padding: EdgeInsets.only(
-                    top: heigh * 0.08,
+                    top: heigh * 0.04,
                     left: heigh * 0.016,
                     right: heigh * 0.016,
                   ),
@@ -109,6 +107,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     key: _formKey,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
                           'Registration',
@@ -201,8 +200,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                                   // );
                                   Navigator.of(
                                     context,
-                                  ).popUntil((route) => false);
+                                  ).pop((route) => false);
                                 } catch (e) {
+                                  showSnackBar(label: '$e', context: context, backgroundColor: Theme.of(context).colorScheme.error, contentTextStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppColors.onError),);
                                   print("Some error: $e");
                                 }
                               }

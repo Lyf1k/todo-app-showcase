@@ -4,10 +4,12 @@ import 'package:flutter_svg/svg.dart';
 import 'package:partfolio_app/core/initialization/widgets/dependencies_scope.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../core/theme/app_colors.dart';
 import '../../../tasks/presentation/bottom_navigation_bar.dart';
 import '../../domain/repository/authentication_repository.dart';
 import '../../utils/auth_validators.dart';
 import '../utils/auth_form_field.dart';
+import '../utils/snack_bar.dart';
 import 'registration_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -53,6 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final heigh = MediaQuery.sizeOf(context).height;
     return Scaffold(
       // backgroundColor: AppColors.background,
       resizeToAvoidBottomInset: true,
@@ -61,10 +64,13 @@ class _LoginScreenState extends State<LoginScreen> {
           children: [
             Align(
               alignment: Alignment.topCenter,
-              child: SvgPicture.asset('assets/Component 1.svg'),
+              child: Padding(
+                padding: EdgeInsets.only(top: heigh * 0.015),
+                child: SvgPicture.asset('assets/Component 1.svg'),
+              ),
             ),
             Positioned.fill(
-              top: 50,
+              top: heigh * 0.09,
               child: Container(
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.onPrimary,
@@ -76,7 +82,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 width: double.infinity,
                 height: MediaQuery.of(context).size.height * 0.2,
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 8.0, left: 16, right: 16),
+                  padding: EdgeInsets.only(
+                    top: heigh * 0.04,
+                    left: heigh * 0.016,
+                    right: heigh * 0.016,
+                  ),
                   child: Form(
                     key: key,
                     child: Column(
@@ -136,6 +146,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                   // );
                                 }
                               } catch (e) {
+                                // ignore: use_build_context_synchronously
+                                showSnackBar(label: '$e', context: context, backgroundColor: Theme.of(context).colorScheme.error, contentTextStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppColors.onError),);
                                 print("Some error: $e");
                               }
                             },

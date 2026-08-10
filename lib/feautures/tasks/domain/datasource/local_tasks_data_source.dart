@@ -5,5 +5,5 @@ abstract interface class LocalTasksDataSource {
   Future<void> addTasks(TasksModel task, int userId);
   Future<void> delTasks(int taskId, int userId);
   Future<void> allDelTasks(int userId);
-  Future<void> editTasks(String newTitle, int tasksId, int userId);
+  Future<void> editTasks(TasksModel task, int userId);
 }
