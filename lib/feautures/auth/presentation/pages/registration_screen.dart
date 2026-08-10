@@ -99,7 +99,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 height: heigh * 0.2,
                 child: Padding(
                   padding: EdgeInsets.only(
-                    top: heigh * 0.08,
+                    top: heigh * 0.04,
                     left: heigh * 0.016,
                     right: heigh * 0.016,
                   ),
@@ -107,6 +107,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     key: _formKey,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(
                           'Registration',
