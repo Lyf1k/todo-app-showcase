@@ -52,9 +52,7 @@ class LocalTasksDataSourceImpl implements LocalTasksDataSource {
 
   @override
   Future<void> editTasks(
-    String newTitle,
-    // DateTime newTodoDateTime,
-    int tasksId,
+    TasksModel task,
     int userId,
   ) async {
     final taskKey = "task_key_$userId";
@@ -64,20 +62,21 @@ class LocalTasksDataSourceImpl implements LocalTasksDataSource {
       final model = getTasks
           .map((e) => TasksModel.fromJson(jsonDecode(e)))
           .toList();
-      final indexItem = model.indexWhere((e) => e.id == tasksId);
+      final indexItem = model.indexWhere((e) => e.id == task.id);
       if (indexItem == -1) return;
 
       final old = model[indexItem];
       final result = TasksModel(
         id: old.id,
-        text: newTitle,
-        dateTime: "${DateTime.now()}",
+        text: task.text,
+        dateTime: DateTime.now(),
+        isDone: task.isDone
       );
       model[indexItem] = result;
       final newList = model.map((e) => jsonEncode(e.toJson())).toList();
       await sharedPreferences.setStringList(taskKey, newList);
     } catch (e) {
-      throw Exception("Error during editing task $tasksId");
+      throw Exception("Error during editing task ${task.id}");
     }
   }
 
