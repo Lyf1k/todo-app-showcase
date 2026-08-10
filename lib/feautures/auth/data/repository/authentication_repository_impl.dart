@@ -10,16 +10,18 @@ import '../mapper/user_mapper.dart';
 class AuthenticationRepositoryImpl implements AuthenticationRepository {
   final LocalAuthDataSource dataSource;
   final UserMapper mapper;
-  late BehaviorSubject<User?> _userStream = BehaviorSubject<User?>();
+  late final BehaviorSubject<User?> _userStream = BehaviorSubject<User?>();
 
-  AuthenticationRepositoryImpl({required this.dataSource, required this.mapper})
-    : _userStream = BehaviorSubject<User?>.seeded(null) {
+  AuthenticationRepositoryImpl({
+    required this.dataSource,
+    required this.mapper,
+  }) {
     print("Init Authentication repository");
-    getCurrentUser();
+    // getCurrentUser();
   }
 
   @override
-  BehaviorSubject<User?> get userStream => _userStream;
+  Stream<User?> get userStream => _userStream;
 
   @override
   Future<void> login({required String login, required String password}) async {
@@ -58,10 +60,10 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
         password: password,
         name: name,
       );
-      print(user.toString());
-      if (user != null) {
-        _userStream.add(mapper.toUser(user));
-      }
+      // print(user.toString());
+      // if (user != null) {
+      //   _userStream.add(mapper.toUser(user));
+      // }
     } catch (e) {
       throw Exception("Some error: $e");
     }
@@ -70,14 +72,15 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   @override
   Future<void> getCurrentUser() async {
     final user = await dataSource.getCurrentUser();
-    print("Getting user from dataSource");
-    _userStream.add(mapper.toUser(user));
+    print("Getting user from dataSource: user - $user");
+    _userStream.add(user == null ? null : mapper.toUser(user));
   }
 
   @override
   Future<void> closeUserStream() async {
     // TODO: implement closeUserStream
-    if (_userStream.isClosed == false) null;
+    if (_userStream.isClosed == false) return;
+    _userStream.add(null);
     _userStream.close();
   }
 }
