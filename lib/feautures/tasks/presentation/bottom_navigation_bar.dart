@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:partfolio_app/feautures/tasks/presentation/tasks_screen.dart';
 
-import '../../notes/presentation/notes_screen.dart';
+import '../../settings/presentation/settings_screen.dart';
+
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,7 +18,7 @@ class _HomeScreen extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: <Widget>[TasksScreen(), NotesScreen()][currentIndex],
+      body: <Widget>[TasksScreen(), SettingsScreen()][currentIndex],
       bottomNavigationBar: NavigationBar(
         // indicatorColor: Colors.amber,
         selectedIndex: currentIndex,

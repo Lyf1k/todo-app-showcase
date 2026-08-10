@@ -43,7 +43,7 @@ class TasksController extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> toggleDoneTask(Tasks task) async {
+  Future<void> toggleTaskDone(Tasks task) async {
     final updateTask = task.copyWith(isDone: !task.isDone);
     final oldTaskId = taskList.indexWhere((element) => element.id == task.id);
     final oldTask = taskList[oldTaskId];

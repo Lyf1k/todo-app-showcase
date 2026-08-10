@@ -70,11 +70,9 @@ if (androidPlugin != null) {
           ),
           tasksMapper: TasksMapper(),
         ),
-        authService: authService,
         sharedPreferencesAsync: sharedPreferences,
         authenticationRepository: AuthenticationRepositoryImpl(
           dataSource: LocalAuthDatasourceImpl(  
-            authService: authService,
             sharedPreferences: sharedPreferences,
           ),
           mapper: UserMapper(),

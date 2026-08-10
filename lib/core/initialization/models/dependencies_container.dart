@@ -7,7 +7,6 @@ import 'package:partfolio_app/feautures/tasks/presentation/state/tasks_state.dar
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DependenciesContainer {
-  final AuthService authService;
   final SharedPreferencesAsync sharedPreferencesAsync;
   final AuthenticationRepository authenticationRepository;
   final TasksRepository tasksRepository;
@@ -15,7 +14,6 @@ class DependenciesContainer {
 
   DependenciesContainer({
     required this.notificationService,
-    required this.authService,
     required this.sharedPreferencesAsync,
     required this.authenticationRepository,
     required this.tasksRepository,

@@ -55,6 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final heigh = MediaQuery.sizeOf(context).height;
     return Scaffold(
       // backgroundColor: AppColors.background,
       resizeToAvoidBottomInset: true,
@@ -63,10 +64,13 @@ class _LoginScreenState extends State<LoginScreen> {
           children: [
             Align(
               alignment: Alignment.topCenter,
-              child: SvgPicture.asset('assets/Component 1.svg'),
+              child: Padding(
+                padding: EdgeInsets.only(top: heigh * 0.015),
+                child: SvgPicture.asset('assets/Component 1.svg'),
+              ),
             ),
             Positioned.fill(
-              top: 50,
+              top: heigh * 0.09,
               child: Container(
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.onPrimary,
@@ -78,7 +82,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 width: double.infinity,
                 height: MediaQuery.of(context).size.height * 0.2,
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 8.0, left: 16, right: 16),
+                  padding: EdgeInsets.only(
+                    top: heigh * 0.04,
+                    left: heigh * 0.016,
+                    right: heigh * 0.016,
+                  ),
                   child: Form(
                     key: key,
                     child: Column(
