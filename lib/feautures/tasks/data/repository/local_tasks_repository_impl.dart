@@ -1,4 +1,5 @@
 import 'package:partfolio_app/feautures/tasks/data/mapper/tasks_mapper.dart';
+import 'package:partfolio_app/feautures/tasks/data/model/tasks_model.dart';
 import 'package:partfolio_app/feautures/tasks/domain/datasource/local_tasks_data_source.dart';
 import 'package:partfolio_app/feautures/tasks/domain/entity/tasks.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -40,9 +41,9 @@ class TasksRepositoryImpl implements TasksRepository {
   }
 
   @override
-  Future<void> editTasks(String newTitle, int tasksId, int userId) async {
+  Future<void> editTasks(Tasks task, int userId) async {
     try {
-      await dataSource.editTasks(newTitle, tasksId, userId);
+      await dataSource.editTasks(tasksMapper.toModel(task), userId);
     } catch (e) {
       throw Exception(e);
     }
@@ -52,7 +53,10 @@ class TasksRepositoryImpl implements TasksRepository {
   Future<List<Tasks>> getTasks(int userId) async {
     try {
       final tasks = await dataSource.getTasks(userId);
-      return tasks;
+      final tasksEntityList = tasks
+          .map((e) => tasksMapper.toEntity(e))
+          .toList();
+      return tasksEntityList;
     } catch (e) {
       print(e);
       throw Exception(e);

@@ -6,5 +6,5 @@ abstract interface class TasksRepository {
   Future<void> addTasks(Tasks task, int userId);
   Future<void> delTasks(int taskId, int userId);
   Future<void> delAllTasks(int userId);
-  Future<void> editTasks(String newTitle, int tasksId, int userId);
+  Future<void> editTasks(Tasks task, int userId);
 }
