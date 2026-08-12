@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:partfolio_app/feautures/auth/domain/entity/user.dart';
+import '../entity/user.dart';
 
 abstract interface class AuthenticationRepository {
   Stream<User?> get userStream;

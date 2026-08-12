@@ -1,10 +1,7 @@
-import 'package:partfolio_app/feautures/tasks/data/mapper/tasks_mapper.dart';
-import 'package:partfolio_app/feautures/tasks/data/model/tasks_model.dart';
-import 'package:partfolio_app/feautures/tasks/domain/datasource/local_tasks_data_source.dart';
-import 'package:partfolio_app/feautures/tasks/domain/entity/tasks.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
+import '../../domain/datasource/local_tasks_data_source.dart';
+import '../../domain/entity/tasks.dart';
 import '../../domain/repository/tasks_repository.dart';
+import '../mapper/tasks_mapper.dart';
 
 class TasksRepositoryImpl implements TasksRepository {
   final LocalTasksDataSource dataSource;

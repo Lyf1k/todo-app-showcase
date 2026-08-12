@@ -1,4 +1,4 @@
-import 'package:partfolio_app/feautures/tasks/data/model/tasks_model.dart';
+import '../../data/model/tasks_model.dart';
 
 abstract interface class LocalTasksDataSource {
   Future<List<TasksModel>> getTasks(int userId);

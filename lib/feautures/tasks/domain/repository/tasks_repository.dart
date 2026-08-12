@@ -1,5 +1,4 @@
-import 'package:partfolio_app/feautures/tasks/data/model/tasks_model.dart';
-import 'package:partfolio_app/feautures/tasks/domain/entity/tasks.dart';
+import '../entity/tasks.dart';
 
 abstract interface class TasksRepository {
   Future<List<Tasks>> getTasks(int userId);

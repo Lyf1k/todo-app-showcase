@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:partfolio_app/core/initialization/auth_tasks_scope.dart';
-import 'package:partfolio_app/core/routing/route_constants.dart';
-import 'package:partfolio_app/feautures/auth/presentation/pages/login_screen.dart';
-import 'package:partfolio_app/feautures/auth/presentation/pages/registration_screen.dart';
-import 'package:partfolio_app/feautures/auth/presentation/state/auth_controller.dart';
-import 'package:partfolio_app/feautures/settings/presentation/settings_screen.dart';
-import 'package:partfolio_app/feautures/tasks/presentation/tasks_screen.dart';
 
+import '../../feautures/auth/presentation/pages/login_screen.dart';
+import '../../feautures/auth/presentation/pages/registration_screen.dart';
+import '../../feautures/auth/presentation/state/auth_controller.dart';
+import '../../feautures/settings/presentation/settings_screen.dart';
+import '../../feautures/tasks/presentation/tasks_screen.dart';
+import '../initialization/auth_tasks_scope.dart';
 import '../loader/loader_screen.dart';
-import '../main_scaffold.dart';
+import '../initialization/widgets/main_scaffold.dart';
+import 'route_constants.dart';
 
 class AppRouter extends ChangeNotifier {
   final AuthController authController;

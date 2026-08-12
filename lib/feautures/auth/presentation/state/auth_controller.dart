@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:partfolio_app/feautures/auth/domain/repository/authentication_repository.dart';
 
 import '../../domain/entity/user.dart';
+import '../../domain/repository/authentication_repository.dart';
 
 enum AuthStatus { authenticated, unauthenticated, unknown }
 

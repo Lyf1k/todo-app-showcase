@@ -1,18 +1,15 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:math';
 
-import 'package:partfolio_app/core/service/auth_service.dart';
-import 'package:partfolio_app/feautures/auth/data/model/user_model.dart';
-import 'package:partfolio_app/feautures/auth/domain/datasource/local_auth_data_source.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../domain/datasource/local_auth_data_source.dart';
+import '../model/user_model.dart';
 
 class LocalAuthDatasourceImpl implements LocalAuthDataSource {
   final SharedPreferencesAsync sharedPreferences;
 
-  LocalAuthDatasourceImpl({
-    required this.sharedPreferences,
-  });
+  LocalAuthDatasourceImpl({required this.sharedPreferences});
 
   static const String _usersKeys = 'auth_users';
   static const String _activeUserId = 'active_user_id';
@@ -21,7 +18,7 @@ class LocalAuthDatasourceImpl implements LocalAuthDataSource {
   Future<UserModel?> getCurrentUser() async {
     try {
       final activeUser = await sharedPreferences.getInt(_activeUserId);
-      if (activeUser   == null) return null;
+      if (activeUser == null) return null;
       print("User from LocalStorage -- $activeUser");
       final userRaw = await sharedPreferences.getStringList(_usersKeys) ?? [];
       for (final userStr in userRaw) {

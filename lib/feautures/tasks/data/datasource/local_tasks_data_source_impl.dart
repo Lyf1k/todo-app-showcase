@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:partfolio_app/feautures/tasks/data/model/tasks_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../domain/datasource/local_tasks_data_source.dart';
+import '../model/tasks_model.dart';
 
 class LocalTasksDataSourceImpl implements LocalTasksDataSource {
   final SharedPreferencesAsync sharedPreferences;
@@ -51,10 +51,7 @@ class LocalTasksDataSourceImpl implements LocalTasksDataSource {
   }
 
   @override
-  Future<void> editTasks(
-    TasksModel task,
-    int userId,
-  ) async {
+  Future<void> editTasks(TasksModel task, int userId) async {
     final taskKey = "task_key_$userId";
     try {
       final getTasks = await sharedPreferences.getStringList(taskKey);
@@ -70,7 +67,7 @@ class LocalTasksDataSourceImpl implements LocalTasksDataSource {
         id: old.id,
         text: task.text,
         dateTime: DateTime.now(),
-        isDone: task.isDone
+        isDone: task.isDone,
       );
       model[indexItem] = result;
       final newList = model.map((e) => jsonEncode(e.toJson())).toList();

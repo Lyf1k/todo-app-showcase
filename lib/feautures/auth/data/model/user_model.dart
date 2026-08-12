@@ -1,4 +1,4 @@
-import 'package:partfolio_app/feautures/auth/domain/entity/user.dart';
+import '../../domain/entity/user.dart';
 
 class UserModel extends User {
   final String password;

@@ -2,12 +2,12 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:partfolio_app/feautures/auth/presentation/state/auth_controller.dart';
-import 'package:partfolio_app/feautures/tasks/domain/entity/tasks.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/initialization/widgets/dependencies_scope.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../auth/presentation/state/auth_controller.dart';
+import '../domain/entity/tasks.dart';
 import '../utils/task_card.dart';
 import 'state/tasks_state.dart';
 
@@ -389,6 +389,7 @@ class _TaskCardsState extends State<_TaskCards> {
               onDismissed: (direction) async {
                 await tasksController.delItem(task.id);
 
+                // ignore: use_build_context_synchronously
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     padding: EdgeInsets.symmetric(horizontal: 8),
@@ -399,7 +400,7 @@ class _TaskCardsState extends State<_TaskCards> {
                     backgroundColor: AppColors.info,
                     content: Padding(
                       padding: const EdgeInsets.all(24.0),
-                      child: Text("${task.text} dissmissed"),
+                      child: Text("Task:'${task.text}' => dissmissed"),
                     ),
                   ),
                 );

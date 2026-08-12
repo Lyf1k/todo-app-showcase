@@ -1,5 +1,5 @@
-import 'package:partfolio_app/feautures/auth/data/model/user_model.dart';
-import 'package:partfolio_app/feautures/auth/domain/entity/user.dart';
+import '../../domain/entity/user.dart';
+import '../model/user_model.dart';
 
 final class UserMapper {
   User toUser(UserModel user) {

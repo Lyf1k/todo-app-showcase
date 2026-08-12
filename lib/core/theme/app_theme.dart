@@ -2,8 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:partfolio_app/core/theme/app_colors.dart';
+
+import 'app_colors.dart';
 
 extension AppTextTheme on TextTheme {
   TextStyle get display => displayLarge!;

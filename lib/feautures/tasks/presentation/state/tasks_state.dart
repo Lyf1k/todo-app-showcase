@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:partfolio_app/core/service/notification_service.dart';
-import 'package:partfolio_app/feautures/tasks/domain/entity/tasks.dart';
-import 'package:partfolio_app/feautures/tasks/domain/repository/tasks_repository.dart';
 import 'package:rxdart/subjects.dart';
-import 'package:timezone/standalone.dart';
 import 'package:timezone/timezone.dart' as tz;
+
+import '../../../../core/service/notification_service.dart';
+import '../../domain/entity/tasks.dart';
+import '../../domain/repository/tasks_repository.dart';
 
 class TasksController extends ChangeNotifier {
   final TasksRepository taskRepository;
@@ -35,7 +35,7 @@ class TasksController extends ChangeNotifier {
   Future<void> loadData() async {
     _isLoading = true;
     notifyListeners();
-    await Future.delayed(Duration(milliseconds: 500));
+    await Future.delayed(Duration(milliseconds: 3000));
     taskList = await taskRepository.getTasks(userId);
     tasksStream.add(taskList);
 

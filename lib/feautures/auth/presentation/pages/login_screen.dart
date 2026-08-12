@@ -2,17 +2,13 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
-import 'package:partfolio_app/core/initialization/widgets/dependencies_scope.dart';
-import 'package:partfolio_app/feautures/auth/presentation/state/auth_controller.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/theme/app_colors.dart';
-import '../../../tasks/presentation/bottom_navigation_bar.dart';
-import '../../domain/repository/authentication_repository.dart';
 import '../../utils/auth_validators.dart';
+import '../state/auth_controller.dart';
 import '../utils/auth_form_field.dart';
 import '../utils/snack_bar.dart';
-import 'registration_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});

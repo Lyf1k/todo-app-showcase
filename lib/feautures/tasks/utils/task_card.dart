@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:partfolio_app/core/theme/app_colors.dart';
+
+import '../../../core/theme/app_colors.dart';
 
 class TaskCard extends StatelessWidget {
   final Color backgroundColor;

@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:partfolio_app/core/routing/routing.dart';
-import 'package:partfolio_app/feautures/auth/presentation/state/auth_controller.dart';
 import 'package:provider/provider.dart';
+
 import '../../feautures/auth/domain/repository/authentication_repository.dart';
+import '../../feautures/auth/presentation/state/auth_controller.dart';
+import '../routing/routing.dart';
 import '../theme/app_theme.dart';
-import 'auth_gate.dart';
 import 'widgets/dependencies_scope.dart';
 
 class AppRoot extends StatefulWidget {

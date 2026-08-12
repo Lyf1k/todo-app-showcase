@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:partfolio_app/core/initialization/models/dependencies_container.dart';
+
+import '../models/dependencies_container.dart';
 
 /// {@template dependencies_scope}
 /// DependenciesScope widget.

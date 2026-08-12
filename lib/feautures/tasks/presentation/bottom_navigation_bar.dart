@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:partfolio_app/feautures/tasks/presentation/tasks_screen.dart';
 
 import '../../settings/presentation/settings_screen.dart';
-
-
+import 'tasks_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
