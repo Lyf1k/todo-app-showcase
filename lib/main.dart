@@ -7,12 +7,12 @@ import 'core/initialization/app_root.dart';
 import 'core/initialization/models/dependencies_container.dart';
 import 'core/initialization/widgets/dependencies_scope.dart';
 import 'core/service/notification_service.dart';
-import 'feautures/auth/data/data_source/local_auth_datasource_impl.dart';
-import 'feautures/auth/data/mapper/user_mapper.dart';
-import 'feautures/auth/data/repository/authentication_repository_impl.dart';
-import 'feautures/tasks/data/datasource/local_tasks_data_source_impl.dart';
-import 'feautures/tasks/data/mapper/tasks_mapper.dart';
-import 'feautures/tasks/data/repository/local_tasks_repository_impl.dart';
+import 'features/auth/data/data_source/local_auth_datasource_impl.dart';
+import 'features/auth/data/mapper/user_mapper.dart';
+import 'features/auth/data/repository/authentication_repository_impl.dart';
+import 'features/tasks/data/datasource/local_tasks_data_source_impl.dart';
+import 'features/tasks/data/mapper/tasks_mapper.dart';
+import 'features/tasks/data/repository/local_tasks_repository_impl.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
