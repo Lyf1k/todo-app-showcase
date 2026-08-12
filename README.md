@@ -35,7 +35,7 @@
 - **intl** — определение timezone
 
 ## Архитектура
-Future-first architecture
+Feature-first architecture
 
 ## Управление состоянием
 Используется стандартный `ChangeNotifier`. В дальнейшем планируется миграция на `bloc`.
