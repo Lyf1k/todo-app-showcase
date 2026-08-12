@@ -1,16 +1,53 @@
-# partfolio_app
+# Task tracker
 
-This application begin created as a demo project for my flutter developer portfolio. Started by 01.07.2026
+Приложение-трекер задач с авторизацией, уведомлениями и локальным хранилищем.
 
-## Getting Started
+**Проект портфолио.**
+*Срок выполнения: 3-4 недели*
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+## Экраны
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### Авторизация
+![Экран авторизации](readme/auth.png)
+![Валидация](readme/auth_validation.png)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Регистрация
+![Экран регистрации](readme/registration.png)
+![Валидация](readme/registration_validation.png)
+
+### Задачи
+![Экран с задачами](readme/tasks.png)
+![Созданные задачи](readme/tasks_w_tasks.png)
+
+### Создание задачи
+![Создание задачи](readme/create_task.png)
+![Заполненные поля](readme/create_task_w_data.png)
+
+### Настройки
+*Пока не реализовано*
+![Экран настроек](readme/settings.png)
+
+## Технологии
+- **Custom DI + ChangeNotifierProvider + Provider** — прокидывание зависимостей
+- **flutter_local_notifications** — уведомления
+- **shared_preferences** — локальное хранилище
+- **intl** — определение timezone
+
+## Архитектура
+Future-first architecture
+
+## Управление состоянием
+Используется стандартный `ChangeNotifier`. В дальнейшем планируется миграция на `bloc`.
+
+## Планы
+- **Profile** — Добавить UI профиля, смену языка и смена темы приложения.
+- **English support** — Интеграция мультиязычности(l10n).
+- **ThemeMode** — Смена темы(в последствии через ThemeExtension).
+
+
+## Дизайн
+Самостоятельно разработал в Figma макет.
+![Макет фигма](readme/maket_figma.png)
+
+
