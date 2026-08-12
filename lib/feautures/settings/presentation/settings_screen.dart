@@ -25,34 +25,37 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget build(BuildContext context) {
     final dependencies = DependenciesScope.of(context)!.dependencies;
     final repository = dependencies.authenticationRepository;
-    return Column(
-      children: [
-        Center(
-          child: Text(
-            "Settings Screen",
-            style: Theme.of(context).textTheme.displayLarge,
+    return SafeArea(
+      child: Column(
+        children: [
+          Center(
+            child: Text(
+              "Settings Screen",
+              style: Theme.of(context).textTheme.displayLarge,
+            ),
           ),
-        ),
-        StreamBuilder(
-          stream: repository.userStream,
-          builder: (context, snapshot) {
-            if (snapshot.hasData == true) {
-              return Text(
-                "Name: ${snapshot.data!.name} \n Login: ${snapshot.data!.login}",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              );
-            } else {
-              return Text("No user");
-            }
-          },
-        ),
-        // CustomPaint(
-        //   size: Size(150, 150),
-        //   painter: ShapePainter(),
-        // ),
-        // MyAnimatedContainerWidget(), 
-        LogoApp()
-      ],
+
+          StreamBuilder(
+            stream: repository.userStream,
+            builder: (context, snapshot) {
+              if (snapshot.hasData == true) {
+                return Text(
+                  "Name: ${snapshot.data!.name} \n Login: ${snapshot.data!.login}",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                );
+              } else {
+                return Text("No user");
+              }
+            },
+          ),
+          // CustomPaint(
+          //   size: Size(150, 150),
+          //   painter: ShapePainter(),
+          // ),
+          // MyAnimatedContainerWidget(),
+          LogoApp(),
+        ],
+      ),
     );
   }
 }
@@ -65,12 +68,16 @@ class ShapePainter extends CustomPainter {
       ..color = Colors.blue
       ..strokeWidth = 5
       ..style = PaintingStyle.stroke;
-    
+
     // Draw diagonal line
     canvas.drawLine(Offset.zero, Offset(size.width, size.height), paint);
 
     // Draw filled circle
-    canvas.drawCircle(Offset(size.width / 2, size.height / 2), 40, Paint()..color = Colors.red);
+    canvas.drawCircle(
+      Offset(size.width / 2, size.height / 2),
+      40,
+      Paint()..color = Colors.red,
+    );
   }
 
   @override
@@ -81,7 +88,8 @@ class MyAnimatedContainerWidget extends StatefulWidget {
   const MyAnimatedContainerWidget({super.key});
 
   @override
-  State<MyAnimatedContainerWidget> createState() => _MyAnimatedContainerWidgetState();
+  State<MyAnimatedContainerWidget> createState() =>
+      _MyAnimatedContainerWidgetState();
 }
 
 class _MyAnimatedContainerWidgetState extends State<MyAnimatedContainerWidget> {
@@ -92,15 +100,17 @@ class _MyAnimatedContainerWidgetState extends State<MyAnimatedContainerWidget> {
     return GestureDetector(
       onTap: () {
         setState(() {
-          _selected =!_selected;
+          _selected = !_selected;
         });
       },
       child: Center(
         child: AnimatedContainer(
-          width: _selected? 200.0 : 100.0,
-          height: _selected? 100.0 : 200.0,
-          color: _selected? Colors.blueGrey : Colors.white,
-          alignment: _selected? Alignment.center : AlignmentDirectional.topCenter,
+          width: _selected ? 200.0 : 100.0,
+          height: _selected ? 100.0 : 200.0,
+          color: _selected ? Colors.blueGrey : Colors.white,
+          alignment: _selected
+              ? Alignment.center
+              : AlignmentDirectional.topCenter,
           duration: const Duration(seconds: 1),
           curve: Curves.fastOutSlowIn,
           child: const FlutterLogo(size: 75),
@@ -124,8 +134,10 @@ class _LogoAppState extends State<LogoApp> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    controller =
-        AnimationController(duration: const Duration(seconds: 2), vsync: this);
+    controller = AnimationController(
+      duration: const Duration(seconds: 2),
+      vsync: this,
+    );
     animation = Tween<double>(begin: 0, end: 300).animate(controller)
       ..addListener(() {
         setState(() {

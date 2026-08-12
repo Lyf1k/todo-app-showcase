@@ -92,33 +92,141 @@ class AppTheme {
   );
 
   static final appTextTheme = TextTheme().copyWith(
-    displayLarge: GoogleFonts.acme(
+    displayLarge: TextStyle(
+      fontFamily: 'Acme',
       fontWeight: FontWeight.bold,
       color: AppColors.textPrimary,
       height: 1.4,
       fontSize: 28,
     ),
-    titleLarge: GoogleFonts.acme(
+    titleLarge: TextStyle(
+      fontFamily: 'Acme',
       fontWeight: FontWeight.w600,
       color: AppColors.textPrimary,
       height: 1.4,
       fontSize: 20,
     ),
-    bodyLarge: GoogleFonts.acme(
+    bodyLarge: TextStyle(
+      fontFamily: 'Acme',
       fontWeight: FontWeight.normal,
       color: AppColors.textPrimary,
       height: 1.4,
       fontSize: 16,
     ),
-    labelLarge: GoogleFonts.acme(
+    labelLarge: TextStyle(
+      fontFamily: 'Acme',
       fontWeight: FontWeight.w600,
       color: AppColors.textSecondary,
       height: 1.4,
       fontSize: 14,
     ),
-    labelSmall: GoogleFonts.acme(
+    labelSmall: TextStyle(
+      fontFamily: 'Acme',
       fontWeight: FontWeight.normal,
       color: AppColors.textSecondary,
+      height: 1.4,
+      fontSize: 12,
+    ),
+  );
+
+  // ---------------- DARK THEME ----------------
+  static final themeDataDark = ThemeData.dark().copyWith(
+    appBarTheme: AppBarTheme(
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      systemOverlayStyle: SystemUiOverlayStyle.light,
+      centerTitle: true,
+      titleTextStyle: appTextThemeDark.headlineLarge,
+      iconTheme: IconThemeData(color: AppColors.primaryDark),
+      actionsIconTheme: IconThemeData(color: AppColors.primaryDark),
+    ),
+    floatingActionButtonTheme: FloatingActionButtonThemeData(
+      shape: CircleBorder(),
+    ),
+    scaffoldBackgroundColor: AppColors.backgroundDark,
+    colorScheme: ColorScheme.dark(primary: AppColors.primaryDark),
+    textTheme: appTextThemeDark,
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        minimumSize: Size(double.infinity, 54),
+        shape: RoundedRectangleBorder(
+          side: BorderSide.none,
+          borderRadius: BorderRadiusGeometry.circular(18),
+        ),
+        backgroundColor: AppColors.primaryDark,
+        foregroundColor: AppColors.onPrimaryDark,
+        disabledForegroundColor: AppColors.onPrimaryDark,
+        disabledBackgroundColor: Colors.grey.shade800,
+        textStyle: appTextThemeDark.bodyLarge,
+      ),
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+      enabledBorder: _border(const Color.fromRGBO(90, 80, 70, 1)),
+      focusedBorder: _border(AppColors.primaryDark),
+      errorBorder: _border(AppColors.errorDark),
+      focusedErrorBorder: _border(AppColors.errorDark),
+      errorStyle: TextStyle(color: AppColors.errorDark),
+      disabledBorder: _border(const Color.fromARGB(255, 60, 58, 56)),
+      hintStyle: appTextThemeDark.bodyLarge!.copyWith(
+        color: const Color.fromRGBO(150, 140, 130, 1),
+      ),
+    ),
+    navigationBarTheme: NavigationBarThemeData(
+      indicatorColor: AppColors.onWarningDark,
+      backgroundColor: const Color.fromARGB(50, 40, 38, 35),
+      labelTextStyle: WidgetStateProperty.all(
+        TextStyle(
+          fontWeight: FontWeight.normal,
+          color: AppColors.textSecondaryDark,
+          height: 1.4,
+          fontSize: 14,
+        ),
+      ),
+      iconTheme: iconThemeDataWidgetStateDark,
+    ),
+  );
+
+  static final iconThemeDataWidgetStateDark =
+      WidgetStateProperty.fromMap(<WidgetStatesConstraint, IconThemeData>{
+        WidgetState.pressed | WidgetState.hovered | WidgetState.dragged:
+            IconThemeData(color: AppColors.successDark),
+        WidgetState.any: IconThemeData(color: AppColors.onSuccessDark),
+      });
+
+  static final appTextThemeDark = TextTheme().copyWith(
+    displayLarge: TextStyle(
+      fontFamily: 'Acme',
+      fontWeight: FontWeight.bold,
+      color: AppColors.textPrimaryDark,
+      height: 1.4,
+      fontSize: 28,
+    ),
+    titleLarge: TextStyle(
+      fontFamily: 'Acme',
+      fontWeight: FontWeight.w600,
+      color: AppColors.textPrimaryDark,
+      height: 1.4,
+      fontSize: 20,
+    ),
+    bodyLarge: TextStyle(
+      fontFamily: 'Acme',
+      fontWeight: FontWeight.normal,
+      color: AppColors.textPrimaryDark,
+      height: 1.4,
+      fontSize: 16,
+    ),
+    labelLarge: TextStyle(
+      fontFamily: 'Acme',
+      fontWeight: FontWeight.w600,
+      color: AppColors.textSecondaryDark,
+      height: 1.4,
+      fontSize: 14,
+    ),
+    labelSmall: TextStyle(
+      fontFamily: 'Acme',
+      fontWeight: FontWeight.normal,
+      color: AppColors.textSecondaryDark,
       height: 1.4,
       fontSize: 12,
     ),
