@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:partfolio_app/feautures/auth/presentation/state/auth_controller.dart';
 import 'package:provider/provider.dart';
 
 import '../../feautures/auth/domain/entity/user.dart';
@@ -6,19 +7,17 @@ import '../../feautures/tasks/presentation/state/tasks_state.dart';
 import 'widgets/dependencies_scope.dart';
 
 class AuthorizedTasksScope extends StatelessWidget {
-  final User user;
   final Widget child;
 
-  const AuthorizedTasksScope({
-    super.key,
-    required this.user,
-    required this.child,
-  });
+  const AuthorizedTasksScope({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
     final dependencies = DependenciesScope.of(context)!.dependencies;
-
+    // final user = Provider.of<AuthController>(context).user;
+    final authController = context.watch<AuthController>();
+    final user = authController.user;
+    print("AuthorizedTasksScope build, user = $user");
     return ChangeNotifierProvider(
       create: (_) {
         print("CREATE TASK CONTROLLER");
@@ -26,13 +25,11 @@ class AuthorizedTasksScope extends StatelessWidget {
         return TasksController(
           notificationService: dependencies.notificationService,
           taskRepository: dependencies.tasksRepository,
-          userId: user.id,
+          userId: user!.id,
         );
       },
       child: Builder(
         builder: (context) {
-          print("initialized: ${context.read<TasksController>().toString()}");
-
           return child;
         },
       ),

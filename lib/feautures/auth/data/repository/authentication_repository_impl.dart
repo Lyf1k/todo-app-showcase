@@ -70,10 +70,11 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   }
 
   @override
-  Future<void> getCurrentUser() async {
+  Future<User?> getCurrentUser() async {
     final user = await dataSource.getCurrentUser();
     print("Getting user from dataSource: user - $user");
     _userStream.add(user == null ? null : mapper.toUser(user));
+    return user;
   }
 
   @override

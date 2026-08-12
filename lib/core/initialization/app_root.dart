@@ -1,5 +1,9 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
 
+import 'package:flutter/material.dart';
+import 'package:partfolio_app/core/routing/routing.dart';
+import 'package:partfolio_app/feautures/auth/presentation/state/auth_controller.dart';
+import 'package:provider/provider.dart';
 import '../../feautures/auth/domain/repository/authentication_repository.dart';
 import '../theme/app_theme.dart';
 import 'auth_gate.dart';
@@ -13,38 +17,51 @@ class AppRoot extends StatefulWidget {
 }
 
 class _AppRootState extends State<AppRoot> {
-
-  AuthenticationRepository? authRepo;
+  late final AuthenticationRepository authRepo;
+  // late final AppRouter appRouter;
 
   @override
-  void didUpdateWidget(covariant AppRoot oldWidget) {
+  void didChangeDependencies() {
     // TODO: implement didUpdateWidget
-    authRepo ??= DependenciesScope.of(
+    authRepo = DependenciesScope.of(
       context,
     )!.dependencies.authenticationRepository;
-    super.didUpdateWidget(oldWidget);
+    // appRouter = AppRouter(authRepository: authRepo);
+    super.didChangeDependencies();
   }
+
   @override
   void dispose() {
     // Mb authRepo not need manage stream lifecycle and will better to move User-logic to Some state class with ChangeNotifier like TasksStateModel
-    authRepo?.closeUserStream();
+    authRepo.closeUserStream();
 
     super.dispose();
   }
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      themeMode: ThemeMode.light,
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.themeDataLight,
-      home: AuthGate(checkUser: () { 
-        DependenciesScope.of(
-      context,
-    )!.dependencies.authenticationRepository.getCurrentUser();
-       },),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => AuthController(authRepository: authRepo),
+        ),
+        ChangeNotifierProvider(
+          create: (context) =>
+              AppRouter(authController: context.read<AuthController>()),
+        ),
+      ],
+      child: Builder(
+        builder: (context) {
+          final appRouter = Provider.of<AppRouter>(context);
+          return MaterialApp.router(
+            title: 'Flutter Demo',
+            themeMode: ThemeMode.light,
+            debugShowCheckedModeBanner: false,
+            theme: AppTheme.themeDataLight,
+            routerConfig: appRouter.goRoute,
+          );
+        },
+      ),
     );
   }
 }

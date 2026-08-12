@@ -1,12 +1,14 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../core/initialization/widgets/dependencies_scope.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../state/auth_controller.dart';
 import '../utils/auth_form_field.dart';
 import '../utils/snack_bar.dart';
-
 
 class RegistrationScreen extends StatefulWidget {
   const RegistrationScreen({super.key});
@@ -50,7 +52,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   @override
   Widget build(BuildContext context) {
     final dependencies = DependenciesScope.of(context)!.dependencies;
-    final auth = dependencies.authenticationRepository;
+    final authController = Provider.of<AuthController>(context);
     final heigh = MediaQuery.sizeOf(context).height;
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -62,18 +64,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               left: heigh * 0.002,
               child: IconButton(
                 onPressed: () {
-                  // Navigator.of(context).pushReplacement(
-                  //   MaterialPageRoute(builder: (context) => LoginScreen()),
-                  // );
-                  Navigator.of(context).pop((route) => false);
+                  context.goNamed('login');
                 },
                 icon: Icon(Icons.arrow_back),
               ),
             ),
-            // Positioned(
-            //   left: MediaQuery.of(context).size.width * 0.3,
-            //   child: SvgPicture.asset('assets/Component 1.svg'),
-            // ),
             Align(
               alignment: Alignment.topCenter,
               child: SvgPicture.asset('assets/Component 1.svg'),
@@ -182,46 +177,34 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                             onPressed: () async {
                               if (_formKey.currentState!.validate() == false) {
                                 print("Button pressed");
-                                return null;
+                                return;
                               } else {
                                 try {
                                   print("Init register");
-                                  await auth.register(
+                                  await authController.registration(
                                     login: loginController.text,
                                     name: nameController.text,
                                     password: passwordController.text,
                                   );
-                                  final user = await auth.userStream.first;
-                                  print(user);
-                                  // Navigator.of(context).pushReplacement(
-                                  //   MaterialPageRoute(
-                                  //     builder: (context) => LoginScreen(),
-                                  //   ),
-                                  // );
-                                  Navigator.of(
-                                    context,
-                                  ).pop((route) => false);
+                                  context.goNamed('login');
                                 } catch (e) {
-                                  showSnackBar(label: '$e', context: context, backgroundColor: Theme.of(context).colorScheme.error, contentTextStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppColors.onError),);
+                                  showSnackBar(
+                                    label: '$e',
+                                    context: context,
+                                    backgroundColor: Theme.of(
+                                      context,
+                                    ).colorScheme.error,
+                                    contentTextStyle: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge
+                                        ?.copyWith(color: AppColors.onError),
+                                  );
                                   print("Some error: $e");
                                 }
                               }
                             },
                             child: Text("Register"),
                           ),
-                        ),
-                        SizedBox(
-                          height: MediaQuery.sizeOf(context).height * 0.02,
-                        ),
-                        StreamBuilder(
-                          stream: auth.userStream,
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              return Text("${snapshot.data!.login}");
-                            } else {
-                              return Text("No User");
-                            }
-                          },
                         ),
                       ],
                     ),
@@ -234,25 +217,4 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
       ),
     );
   }
-
-  // void setFocus() {
-  //   Focus.of(context).requestFocus((focusNode));
-  // }
-
-  // String? validatePassword(
-  //   String password,
-  //   bool isConfirmPassowrd,
-  //   String? confirmPassword,
-  // ) {
-  //   if (isConfirmPassowrd) {
-  //     password.contains(confirmPassword!) ? "Password don\'t match" : null;
-  //   } else {
-  //     if (password.length <= 7) {
-  //       return "The password length must be more than 4 characters";
-  //     } else {
-  //       return null;
-  //     }
-  //   }
-  //   return null;
-  // }
 }

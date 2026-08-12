@@ -1,7 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:partfolio_app/core/initialization/widgets/dependencies_scope.dart';
+import 'package:partfolio_app/feautures/auth/presentation/state/auth_controller.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/theme/app_colors.dart';
@@ -34,18 +36,8 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   @override
-  void didUpdateWidget(covariant LoginScreen oldWidget) {
-    // TODO: implement didUpdateWidget\
-    key.currentState?.reset();
-    key.currentState?.dispose();
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
   void dispose() {
     // TODO: implement dispose
-    key.currentState?.reset();
-    key.currentState?.dispose();
     loginController.clear();
     loginController.dispose();
     passwordController.clear();
@@ -56,6 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final heigh = MediaQuery.sizeOf(context).height;
+    final authController = Provider.of<AuthController>(context);
     return Scaffold(
       // backgroundColor: AppColors.background,
       resizeToAvoidBottomInset: true,
@@ -129,26 +122,25 @@ class _LoginScreenState extends State<LoginScreen> {
                           child: ElevatedButton(
                             onPressed: () async {
                               try {
-                                final auth = DependenciesScope.of(
-                                  context,
-                                )!.dependencies.authenticationRepository;
                                 if (key.currentState!.validate()) {
-                                  await auth.login(
+                                  await authController.login(
                                     login: loginController.text.trim(),
                                     password: passwordController.text.trim(),
                                   );
-                                  // print("Validate true");
-                                  // Navigator.pushReplacement(
-                                  //   context,
-                                  //   MaterialPageRoute(
-                                  //     builder: (context) => HomeScreen(),
-                                  //   ),
-                                  // );
                                 }
                               } catch (e) {
-                                // ignore: use_build_context_synchronously
-                                showSnackBar(label: '$e', context: context, backgroundColor: Theme.of(context).colorScheme.error, contentTextStyle: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppColors.onError),);
-                                print("Some error: $e");
+                                if (!mounted) return;
+                                showSnackBar(
+                                  label: '$e',
+                                  context: context,
+                                  backgroundColor: Theme.of(
+                                    context,
+                                  ).colorScheme.error,
+                                  contentTextStyle: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge
+                                      ?.copyWith(color: AppColors.onError),
+                                );
                               }
                             },
                             child: Text("Login"),
@@ -176,16 +168,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                                 recognizer: TapGestureRecognizer()
                                   ..onTap = () {
-                                    // Navigate to Register
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute<void>(
-                                        builder: (context) =>
-                                            RegistrationScreen(),
-                                      ),
-                                    );
-                                    key.currentState!.reset();
-                                    loginController.clear();
-                                    passwordController.clear();
+                                    context.goNamed('register');
                                     print("Button tapped");
                                   },
                               ),

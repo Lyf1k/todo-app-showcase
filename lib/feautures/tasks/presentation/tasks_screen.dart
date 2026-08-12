@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:partfolio_app/feautures/auth/presentation/state/auth_controller.dart';
 import 'package:partfolio_app/feautures/tasks/domain/entity/tasks.dart';
 import 'package:provider/provider.dart';
 
@@ -41,6 +44,7 @@ class _TasksScreen extends State<TasksScreen> {
       context,
       listen: false,
     );
+    final authController = Provider.of<AuthController>(context);
     return SafeArea(
       child: CustomScrollView(
         physics: const BouncingScrollPhysics(
@@ -72,7 +76,7 @@ class _TasksScreen extends State<TasksScreen> {
               ),
               IconButton.filled(
                 onPressed: () async {
-                  await dependencies.authenticationRepository.logout();
+                  await authController.logout();
                 },
                 icon: Icon(
                   Icons.login_outlined,
@@ -108,6 +112,7 @@ class _TasksScreen extends State<TasksScreen> {
 
   showModalBottom({required BuildContext context, required Widget child}) {
     return showModalBottomSheet(
+      useRootNavigator: true,
       backgroundColor: AppColors.surfaceVariant,
       constraints: BoxConstraints(
         maxHeight: MediaQuery.of(context).size.height - 10,
@@ -201,93 +206,107 @@ class _CreateTodoModalBottomSheetState
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ?dateTime != null
-            ? DecoratedBox(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(16)),
-                  border: Border.all(
-                    color: CupertinoColors.inactiveGray,
-                    width: 0.0,
+    return Padding(
+      padding: EdgeInsetsGeometry.symmetric(horizontal: 8),
+      child: Column(
+        children: [
+          ?dateTime != null
+              ? Padding(
+                  padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).size.height * 0.018,
                   ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [Text("Selected date time: $dateTime")],
-                  ),
-                ),
-              )
-            : null,
-        TextFormField(
-          controller: todosNameController,
-          autofocus: true,
-          decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.white, width: 4),
-              borderRadius: BorderRadius.circular(34),
-            ),
-            hintText: 'To-dos',
-            hintStyle: Theme.of(
-              context,
-            ).textTheme.bodyLarge?.copyWith(color: AppColors.onInfo),
-          ),
-        ),
-
-        Padding(
-          padding: EdgeInsetsGeometry.only(
-            top: MediaQuery.of(context).size.height * 0.02,
-          ),
-          child: Row(
-            children: [
-              IconButton(
-                onPressed: () {
-                  _showDialog(
-                    CupertinoDatePicker(
-                      use24hFormat: true,
-                      onDateTimeChanged: (DateTime newDateTime) {
-                        setState(() {
-                          dateTime = newDateTime;
-                        });
-                      },
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(16)),
+                      border: Border.all(
+                        color: CupertinoColors.inactiveGray,
+                        width: 0.0,
+                      ),
                     ),
-                  );
-                },
-                icon: Icon(Icons.alarm_outlined),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20.0, bottom: 20),
+                          child: Text(
+                            "Selected date time: $dateTime",
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              : null,
+
+          TextFormField(
+            controller: todosNameController,
+            autofocus: true,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.white, width: 4),
+                borderRadius: BorderRadius.circular(34),
               ),
-              Spacer(),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.2,
-                child: ElevatedButton(
-                  onPressed: _canSave
-                      ? () {
-                          final newTask = Tasks(
-                            id: DateTime.now().microsecondsSinceEpoch,
-                            text: todosNameController.text.trim(),
-                            isDone: false,
-                            dateTime: dateTime,
-                          );
-                          widget.tasksController.addItem(
-                            newTask,
-                            todoNotificationTime: dateTime,
-                          );
-                          Navigator.of(context).pop();
-                        }
-                      : null,
-                  child: Text(
-                    "Save",
-                    style: Theme.of(
-                      context,
-                    ).textTheme.bodyLarge?.copyWith(color: Colors.white),
+              hintText: 'To-dos',
+              hintStyle: Theme.of(
+                context,
+              ).textTheme.bodyLarge?.copyWith(color: AppColors.onInfo),
+            ),
+          ),
+
+          Padding(
+            padding: EdgeInsetsGeometry.only(
+              top: MediaQuery.of(context).size.height * 0.018,
+            ),
+            child: Row(
+              children: [
+                IconButton(
+                  onPressed: () {
+                    _showDialog(
+                      CupertinoDatePicker(
+                        use24hFormat: true,
+                        onDateTimeChanged: (DateTime newDateTime) {
+                          setState(() {
+                            dateTime = newDateTime;
+                          });
+                        },
+                      ),
+                    );
+                  },
+                  icon: Icon(Icons.alarm_outlined),
+                ),
+                Spacer(),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.2,
+                  child: ElevatedButton(
+                    onPressed: _canSave
+                        ? () {
+                            final newTask = Tasks(
+                              id: Random().nextInt(10000),
+                              text: todosNameController.text.trim(),
+                              isDone: false,
+                              dateTime: dateTime,
+                            );
+                            widget.tasksController.addItem(
+                              newTask,
+                              todoNotificationTime: dateTime,
+                            );
+                            Navigator.of(context).pop();
+                          }
+                        : null,
+                    child: Text(
+                      "Save",
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodyLarge?.copyWith(color: Colors.white),
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -400,7 +419,7 @@ class _TaskCardsState extends State<_TaskCards> {
                     isCompleted: task.isDone,
                     taskName: task.text,
                     backgroundColor: AppColors.surface,
-                    onPressed: () => tasksController.toggleDoneTask(task),
+                    onPressed: () => tasksController.toggleTaskDone(task),
                     onToggle: (value) =>
                         setState(() => task.copyWith(isDone: value)),
                     dateTime: task.dateTime,
