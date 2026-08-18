@@ -4,8 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../core/initialization/widgets/dependencies_scope.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../../core/theme/theme_controller.dart';
 import '../../auth/presentation/state/auth_controller.dart';
 import '../domain/entity/tasks.dart';
 import '../utils/task_card.dart';
@@ -21,6 +21,8 @@ class TasksScreen extends StatefulWidget {
 class _TasksScreen extends State<TasksScreen> {
   late TextEditingController todosNameController;
   late DateTime? dateTime;
+
+  late bool value;
 
   @override
   void initState() {
@@ -39,12 +41,13 @@ class _TasksScreen extends State<TasksScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final dependencies = DependenciesScope.of(context)!.dependencies;
     final tasksController = Provider.of<TasksController>(
       context,
       listen: false,
     );
     final authController = Provider.of<AuthController>(context);
+    final height = MediaQuery.of(context).size.height;
+    final width = MediaQuery.of(context).size.width;
     return SafeArea(
       child: CustomScrollView(
         physics: const BouncingScrollPhysics(
@@ -55,7 +58,9 @@ class _TasksScreen extends State<TasksScreen> {
             pinned: true,
             expandedHeight: 100,
             actions: [
+              _SwitchThemeModeButton(),
               IconButton.outlined(
+                tooltip: "Delete all items",
                 onPressed: () async {
                   await tasksController.delAllItems();
                   // await tasksController.loadData();
@@ -63,18 +68,22 @@ class _TasksScreen extends State<TasksScreen> {
                 icon: Icon(Icons.delete),
               ),
               IconButton(
+                tooltip: "Create task",
                 onPressed: () async {
                   showModalBottom(
                     context: context,
                     child: _CreateTodoModalBottomSheet(
                       tasksController: tasksController,
                     ),
+                    height: height,
+                    width: width,
                   );
                   // tasksController.addItem("ASDASD");
                 },
                 icon: Icon(Icons.add),
               ),
               IconButton.filled(
+                tooltip: "Log out",
                 onPressed: () async {
                   await authController.logout();
                 },
@@ -86,8 +95,8 @@ class _TasksScreen extends State<TasksScreen> {
             ],
             flexibleSpace: FlexibleSpaceBar(
               titlePadding: EdgeInsets.only(
-                top: MediaQuery.sizeOf(context).height * 0.01,
-                left: MediaQuery.sizeOf(context).width * 0.01,
+                top: height * 0.01,
+                left: width * 0.01,
               ),
               // collapseMode: CollapseMode.values[14,],
               title: Text(
@@ -110,14 +119,16 @@ class _TasksScreen extends State<TasksScreen> {
     );
   }
 
-  showModalBottom({required BuildContext context, required Widget child}) {
+  showModalBottom({
+    required BuildContext context,
+    required Widget child,
+    required double height,
+    required double width,
+  }) {
     return showModalBottomSheet(
       useRootNavigator: true,
-      backgroundColor: AppColors.surfaceVariant,
-      constraints: BoxConstraints(
-        maxHeight: MediaQuery.of(context).size.height - 10,
-        maxWidth: MediaQuery.of(context).size.width - 12,
-      ),
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      constraints: BoxConstraints(maxHeight: height - 10, maxWidth: width - 12),
       barrierColor: const Color(0xFF253444).withValues(alpha: 0.5),
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
@@ -130,11 +141,9 @@ class _TasksScreen extends State<TasksScreen> {
       builder: (BuildContext context) {
         return Padding(
           padding: EdgeInsets.only(
-            bottom:
-                MediaQuery.viewInsetsOf(context).bottom +
-                MediaQuery.of(context).size.height * 0.025,
-            left: MediaQuery.of(context).size.height * 0.015,
-            right: MediaQuery.of(context).size.height * 0.015,
+            bottom: MediaQuery.viewInsetsOf(context).bottom + height * 0.025,
+            left: height * 0.015,
+            right: height * 0.015,
           ),
           child: SingleChildScrollView(
             child: Column(
@@ -160,6 +169,43 @@ class _TasksScreen extends State<TasksScreen> {
           ),
         );
       },
+    );
+  }
+}
+
+class _SwitchThemeModeButton extends StatefulWidget {
+  const _SwitchThemeModeButton({super.key});
+
+  @override
+  State<_SwitchThemeModeButton> createState() => _SwitchThemeModeButtonState();
+}
+
+class _SwitchThemeModeButtonState extends State<_SwitchThemeModeButton> {
+  late bool isDark;
+
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    isDark = Provider.of<AppThemeController>(context).isDark;
+    super.didChangeDependencies();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final themeController = Provider.of<AppThemeController>(context);
+    return Row(
+      children: [
+        Icon(isDark ? Icons.dark_mode_outlined : Icons.light_mode_outlined),
+        Switch.adaptive(
+          value: isDark,
+          onChanged: (bool value) async {
+            await themeController.switchTheme(value);
+            setState(() {
+              isDark = value;
+            });
+          },
+        ),
+      ],
     );
   }
 }
@@ -206,6 +252,7 @@ class _CreateTodoModalBottomSheetState
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return Padding(
       padding: EdgeInsetsGeometry.symmetric(horizontal: 8),
       child: Column(
@@ -229,8 +276,8 @@ class _CreateTodoModalBottomSheetState
                         Padding(
                           padding: const EdgeInsets.only(top: 20.0, bottom: 20),
                           child: Text(
-                            "Selected date time: $dateTime",
-                            style: Theme.of(context).textTheme.bodyLarge,
+                            " Selected date time: $dateTime",
+                            style: textTheme.bodyLarge,
                           ),
                         ),
                       ],
@@ -248,9 +295,7 @@ class _CreateTodoModalBottomSheetState
                 borderRadius: BorderRadius.circular(34),
               ),
               hintText: 'To-dos',
-              hintStyle: Theme.of(
-                context,
-              ).textTheme.bodyLarge?.copyWith(color: AppColors.onInfo),
+              hintStyle: textTheme.bodyLarge,
             ),
           ),
 
@@ -331,7 +376,7 @@ class _CreateTodoModalBottomSheetState
 }
 
 class _TaskCards extends StatefulWidget {
-  _TaskCards({super.key});
+  const _TaskCards({super.key});
 
   @override
   State<_TaskCards> createState() => _TaskCardsState();
@@ -345,6 +390,7 @@ class _TaskCardsState extends State<_TaskCards> {
       context,
       listen: false,
     );
+    final textTheme = Theme.of(context).textTheme;
     return StreamBuilder(
       stream: tasksController.tasksStream,
       builder: (context, snapshot) {
@@ -353,10 +399,7 @@ class _TaskCardsState extends State<_TaskCards> {
             child: Center(
               child: Column(
                 children: [
-                  Text(
-                    "Uploading tasks...",
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
+                  Text("Uploading tasks...", style: textTheme.titleLarge),
                   CircularProgressIndicator(),
                 ],
               ),
@@ -366,12 +409,7 @@ class _TaskCardsState extends State<_TaskCards> {
         final tasks = snapshot.data!;
         if (tasks.isEmpty) {
           return SliverToBoxAdapter(
-            child: Center(
-              child: Text(
-                "No tasks",
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-            ),
+            child: Center(child: Text("No tasks", style: textTheme.titleLarge)),
           );
         }
         return SliverList.separated(
@@ -419,10 +457,10 @@ class _TaskCardsState extends State<_TaskCards> {
                   child: TaskCard(
                     isCompleted: task.isDone,
                     taskName: task.text,
-                    backgroundColor: AppColors.surface,
+                    backgroundColor: Theme.of(context).colorScheme.surface,
                     onPressed: () => tasksController.toggleTaskDone(task),
-                    onToggle: (value) =>
-                        setState(() => task.copyWith(isDone: value)),
+                    // onToggle: (value) =>
+                    //     setState(() => task.copyWith(isDone: value)),
                     dateTime: task.dateTime,
                     activeIcon: Icon(Icons.circle_outlined),
                     deactiveteIcon: Icon(Icons.check_circle_outline),

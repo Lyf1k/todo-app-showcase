@@ -55,14 +55,17 @@ class _LoginScreenState extends State<LoginScreen> {
               alignment: Alignment.topCenter,
               child: Padding(
                 padding: EdgeInsets.only(top: heigh * 0.015),
-                child: SvgPicture.asset('assets/Component 1.svg'),
+                child: SvgPicture.asset(
+                  'assets/Component 1.svg',
+                  color: AppColors.textPrimaryDark,
+                ),
               ),
             ),
             Positioned.fill(
               top: heigh * 0.09,
               child: Container(
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.onPrimary,
+                  color: Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(40),
                     topRight: Radius.circular(40),

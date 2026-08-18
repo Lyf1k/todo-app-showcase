@@ -35,7 +35,10 @@ class AppTheme {
       shape: CircleBorder(),
     ),
     scaffoldBackgroundColor: AppColors.background,
-    colorScheme: ColorScheme.light(primary: AppColors.primary),
+    colorScheme: ColorScheme.light(
+      primary: AppColors.primary,
+      surface: AppColors.surfaceVariant,
+    ),
     textTheme: appTextTheme,
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
@@ -143,8 +146,11 @@ class AppTheme {
     floatingActionButtonTheme: FloatingActionButtonThemeData(
       shape: CircleBorder(),
     ),
-    scaffoldBackgroundColor: AppColors.backgroundDark,
-    colorScheme: ColorScheme.dark(primary: AppColors.primaryDark),
+    scaffoldBackgroundColor: AppColors.surfaceVariantDark,
+    colorScheme: ColorScheme.dark(
+      primary: AppColors.primaryDark,
+      surface: AppColors.backgroundDark,
+    ),
     textTheme: appTextThemeDark,
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
@@ -173,7 +179,7 @@ class AppTheme {
       ),
     ),
     navigationBarTheme: NavigationBarThemeData(
-      indicatorColor: AppColors.onWarningDark,
+      indicatorColor: AppColors.surfaceVariant,
       backgroundColor: const Color.fromARGB(50, 40, 38, 35),
       labelTextStyle: WidgetStateProperty.all(
         TextStyle(
@@ -191,7 +197,7 @@ class AppTheme {
       WidgetStateProperty.fromMap(<WidgetStatesConstraint, IconThemeData>{
         WidgetState.pressed | WidgetState.hovered | WidgetState.dragged:
             IconThemeData(color: AppColors.successDark),
-        WidgetState.any: IconThemeData(color: AppColors.onSuccessDark),
+        WidgetState.any: IconThemeData(color: AppColors.onPrimaryDark),
       });
 
   static final appTextThemeDark = TextTheme().copyWith(

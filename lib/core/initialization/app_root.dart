@@ -1,12 +1,11 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../feautures/auth/domain/repository/authentication_repository.dart';
-import '../../feautures/auth/presentation/state/auth_controller.dart';
+import '../../features/auth/domain/repository/authentication_repository.dart';
+import '../../features/auth/presentation/state/auth_controller.dart';
 import '../routing/routing.dart';
 import '../theme/app_theme.dart';
+import '../theme/theme_controller.dart';
 import 'widgets/dependencies_scope.dart';
 
 class AppRoot extends StatefulWidget {
@@ -40,6 +39,7 @@ class _AppRootState extends State<AppRoot> {
 
   @override
   Widget build(BuildContext context) {
+    final dependencies = DependenciesScope.of(context)!.dependencies;
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
@@ -49,16 +49,26 @@ class _AppRootState extends State<AppRoot> {
           create: (context) =>
               AppRouter(authController: context.read<AuthController>()),
         ),
+        ChangeNotifierProvider(
+          create: (context) => AppThemeController(
+            sharedPreferencesAsync: dependencies.sharedPreferencesAsync,
+          ),
+        ),
       ],
       child: Builder(
         builder: (context) {
           final appRouter = Provider.of<AppRouter>(context);
-          return MaterialApp.router(
-            title: 'Flutter Demo',
-            themeMode: ThemeMode.light,
-            debugShowCheckedModeBanner: false,
-            theme: AppTheme.themeDataLight,
-            routerConfig: appRouter.goRoute,
+          // final themeMode = Provider.of<AppThemeController>(context);
+          return Consumer<AppThemeController>(
+            builder: (context, state, child) => MaterialApp.router(
+              title: 'Flutter Demo',
+              // themeMode: ThemeMode.light,
+              debugShowCheckedModeBanner: false,
+              theme: state.isDark
+                  ? AppTheme.themeDataDark
+                  : AppTheme.themeDataLight,
+              routerConfig: appRouter.goRoute,
+            ),
           );
         },
       ),

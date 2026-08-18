@@ -50,7 +50,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final dependencies = DependenciesScope.of(context)!.dependencies;
     final authController = Provider.of<AuthController>(context);
     final heigh = MediaQuery.sizeOf(context).height;
     return Scaffold(
@@ -70,10 +69,16 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             ),
             Align(
               alignment: Alignment.topCenter,
-              child: SvgPicture.asset('assets/Component 1.svg'),
+              child: Padding(
+                padding: EdgeInsets.only(top: heigh * 0.015),
+                child: SvgPicture.asset(
+                  'assets/Component 1.svg',
+                  color: AppColors.textPrimaryDark,
+                ),
+              ),
             ),
             Positioned.fill(
-              top: MediaQuery.sizeOf(context).height * 0.05,
+              top: MediaQuery.sizeOf(context).height * 0.09,
               child: Container(
                 decoration: BoxDecoration(
                   boxShadow: [
@@ -83,7 +88,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     BoxShadow(color: Colors.grey),
                   ],
                   // color: AppColors.onPrimary,
-                  color: Theme.of(context).colorScheme.onPrimary,
+                  color: Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(40),
                     topRight: Radius.circular(40),

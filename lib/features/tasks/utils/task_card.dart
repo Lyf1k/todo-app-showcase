@@ -10,7 +10,7 @@ class TaskCard extends StatelessWidget {
   final String taskName;
   final DateTime? dateTime;
   final bool isCompleted;
-  final ValueChanged<bool> onToggle;
+  // final ValueChanged<bool> onToggle;
   final Icon activeIcon;
   final Icon deactiveteIcon;
   const TaskCard({
@@ -20,7 +20,7 @@ class TaskCard extends StatelessWidget {
     this.taskName = " No name ...",
     this.dateTime,
     required this.isCompleted,
-    required this.onToggle,
+    // required this.onToggle,
     required this.activeIcon,
     required this.deactiveteIcon,
   });
@@ -40,7 +40,7 @@ class TaskCard extends StatelessWidget {
             child: IconButton(
               onPressed: () async {
                 await onPressed();
-                onToggle(!isCompleted);
+                // onToggle(!isCompleted);
               },
               icon: isCompleted ? deactiveteIcon : activeIcon,
             ),
@@ -51,33 +51,45 @@ class TaskCard extends StatelessWidget {
             children: [
               SizedBox(
                 width: MediaQuery.sizeOf(context).width * 0.4,
-                child: Text(
-                  // maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  taskName,
-                  style: isCompleted
-                      ? Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          decoration: TextDecoration.lineThrough,
-                          color: Colors.grey.shade500,
-                        )
-                      : Theme.of(context).textTheme.bodyLarge,
-                  // softWrap: true,
+                child: AnimatedDefaultTextStyle(
+                  duration: Duration(milliseconds: 1000),
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                    decoration: isCompleted
+                        ? TextDecoration.lineThrough
+                        : TextDecoration.none,
+                    // fontSize: 12,
+                    color: isCompleted ? AppColors.textDisabled : null,
+                  ),
+                  curve: Curves.easeIn,
+                  child: Text(taskName),
                 ),
+                // Text(
+                //   // maxLines: 1,
+                //   overflow: TextOverflow.ellipsis,
+                //   taskName,
+                //   style: isCompleted
+                //       ? Theme.of(context).textTheme.bodyLarge?.copyWith(
+                //           decoration: TextDecoration.lineThrough,
+                //           color: Colors.grey.shade500,
+                //         )
+                //       : Theme.of(context).textTheme.bodyLarge,
+                //   // softWrap: true,
+                // ),
               ),
               dateTime == null
                   ? SizedBox()
                   : AnimatedDefaultTextStyle(
                       duration: Duration(milliseconds: 1000),
-                      style: TextStyle(
+                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                         decoration: isCompleted
                             ? TextDecoration.lineThrough
                             : TextDecoration.none,
                         fontSize: 12,
-                        color: isCompleted ? Colors.grey : AppColors.onInfo,
+                        color: isCompleted ? AppColors.textDisabled : null,
                       ),
                       curve: Curves.easeIn,
                       child: Text(
-                        DateFormat("dd.MM.yyyy H:m").format(dateTime!),
+                        DateFormat("dd.MM.yyyy H:mm").format(dateTime!),
                       ),
                     ),
             ],
